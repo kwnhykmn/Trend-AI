@@ -1,0 +1,33 @@
+version: '3.8' # docker-compose 파일 규격 버전을 명시
+
+services: # 이 아래에 실행할 서비스(즉 컨테이너)들을 정의
+
+# 1.백엔드 API 서버 서비스 정의
+  backend:
+    container_name : trend-ai-backend-container # 컨테이너의 고정 이름 지정
+    build:
+      context: ./backend #Dockerfile이 있는 경로 지정
+      dockerfile: Dockerfile 
+    ports:
+      - "8000:8000" # 호스트의 8000 포트를 컨테이너의 8000 포트에 연결(매핑)
+    volumes:
+      - ./backend:/app #호스트의 ./backend 폴더와 컨테이너의 /app 폴더를 연결 (코드 변경 시 자동 반영, 실시간)
+    env_file:
+      - ./backend/.env # 환경 변수 파일 지정
+    depends_on:
+      - db # 이 서비스는 db 서비스가 시작된 후에 시작됨
+
+  db:
+    container_name: trend-ai-db-container
+    image: postgres:15-alpine #공식 PostgreSQL 이미지 사용 (경량 alpine 버전)
+    ports: 
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data # 데이터를 영속적으로 저장하기 위한 볼륨 연결
+    environment:
+      - POSTGRES_USER=myuser
+      - POSTGRES_PASSWORD=mypassword
+      - POSTGRES_DB=mydatabase 
+
+volumes: #위에서 사용한 볼륨을 정의
+  pgdata: 
