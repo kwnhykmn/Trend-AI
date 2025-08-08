@@ -1,5 +1,5 @@
 from sqlalchemy import Column, Integer, String, Boolean
-from database import Base
+from .database import Base # . 은 같은 폴더를 의미
 
 class User(Base):
     __tablename__ = "users"

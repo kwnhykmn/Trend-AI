@@ -11,7 +11,7 @@ services: # 이 아래에 실행할 서비스(즉 컨테이너)들을 정의
     ports:
       - "8000:8000" # 호스트의 8000 포트를 컨테이너의 8000 포트에 연결(매핑)
     volumes:
-      - ./backend:/app #호스트의 ./backend 폴더와 컨테이너의 /app 폴더를 연결 (코드 변경 시 자동 반영, 실시간)
+      - ./backend/app:/app/app # 볼륨 마운트 경로도 변경 #호스트의 ./backend 폴더와 컨테이너의 /app 폴더를 연결 (코드 변경 시 자동 반영, 실시간)
     env_file:
       - ./backend/.env # 환경 변수 파일 지정
     depends_on:

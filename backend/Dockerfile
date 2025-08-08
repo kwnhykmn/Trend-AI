@@ -16,10 +16,10 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 # 4. 소스 코드를 복사합니다.
 # 호스트의 현재 디렉토리(.)에 있는 모든 파일을 컨테이너의 /app/ 안으로 복사합니다.
-COPY . .
+COPY ./app /app/app
 
 # 5. 컨테이너가 시작될 때 실행될 명령(Command)을 지정합니다.
 # uvicorn 서버를 실행하여 main.py 안의 app 객체를 실행시킵니다.
 # --host 0.0.0.0 옵션은 컨테이너 외부에서 접근 가능하도록 만듭니다.
 # --port 8000 옵션은 8000번 포트를 사용하도록 합니다.
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]

@@ -25,3 +25,11 @@ SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 # 5. ORM 모델의 기본 클래스 생성
 # 앞으로 우리가 만들 DB 테이블 모델 (e.g., User, Post 등)들은 모두 이 Base 클래스를 상속 받아야 합니다.
 Base = declarative_base()
+
+# Dependency (의존성 주입을 위한 함수)
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db # 데이터베이스 세션을 생성하고 반환
+    finally:
+        db.close() # 세션을 닫아 리소스 해제

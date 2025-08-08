@@ -2,8 +2,7 @@
 #이 파일은 데이터베이스와 상호작용하는 함수들을 정의합니다.
 # 실제 API를 만들 차례
 from sqlalchemy.orm import Session
-import models
-import schemas 
+from . import models, schemas # . 은 같은 폴더를 의미
 
 # 특정 ID로 사용자 조회
 def get_user(db: Session, user_id: int):
