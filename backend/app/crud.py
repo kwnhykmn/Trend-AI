@@ -21,3 +21,27 @@ def create_user(db: Session, user: schemas.UserCreate):
     db.commit()
     db.refresh(db_user)
     return db_user
+
+# --- Update ---
+def update_user(db: Session, db_user: models.User, user_update: schemas.UserUpdate):
+    # Pydantic 모델에서 받은 데이터 중, 실제 값이 있는 필드만 추출
+    update_data = user_update.dict(exclude_unset=True)
+    
+    # 추출된 데이터로 기존 db_user 객체의 속성을 업데이트
+    for key, value in update_data.items():
+        setattr(db_user, key, value)
+        
+    db.add(db_user)
+    db.commit()
+    db.refresh(db_user)
+    return db_user
+
+# --- Delete ---
+def delete_user(db: Session, db_user: models.User):
+    """
+    주어진 사용자 ORM 객체를 데이터베이스에서 삭제합니다.
+    """
+    db.delete(db_user)
+    db.commit()
+    # 삭제된 객체를 반환하여 API에서 마지막으로 확인할 수 있게 합니다.
+    return db_user
