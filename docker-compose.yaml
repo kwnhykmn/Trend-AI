@@ -1,0 +1,55 @@
+# 가장 단순화된 Airflow Docker Compose 파일
+version: "3"
+x-airflow-common:
+  &airflow-common
+  image: apache/airflow:2.8.4-python3.9
+  platform: linux/amd64  # Rosetta를 사용하므로 AMD64를 명시
+  user: "${AIRFLOW_UID:-50000}"
+  environment:
+    - AIRFLOW__DATABASE__SQL_ALCHEMY_CONN=postgresql+psycopg2://airflow:airflow@postgres/airflow
+    - AIRFLOW__CELERY__RESULT_BACKEND=db+postgresql://airflow:airflow@postgres/airflow
+    - AIRFLOW__CELERY__BROKER_URL=redis://:@redis:6379/1
+    - AIRFLOW__CORE__EXECUTOR=CeleryExecutor
+  volumes:
+    - ./dags:/opt/airflow/dags
+    - ./logs:/opt/airflow/logs
+    - ./plugins:/opt/airflow/plugins
+  depends_on:
+    - postgres
+    - redis
+
+services:
+  postgres:
+    image: postgres:13
+    container_name: airflow-postgres-standalone
+    environment:
+      - POSTGRES_USER=airflow
+      - POSTGRES_PASSWORD=airflow
+      - POSTGRES_DB=airflow
+    ports:
+      - "5433:5432"
+
+  redis:
+    image: redis:latest
+    container_name: airflow-redis-standalone
+
+  airflow-init:
+    <<: *airflow-common
+    container_name: airflow-init-standalone
+    entrypoint: /bin/bash
+    command: ["-c", "airflow db init && airflow users create --username airflow --password airflow --firstname Anonymous --lastname Admin --role Admin --email admin@example.com"]
+    user: "0:0"
+
+  airflow-webserver:
+    <<: *airflow-common
+    command: webserver
+    ports:
+      - "8080:8080"
+    container_name: airflow-webserver-standalone
+    restart: always
+
+  airflow-scheduler:
+    <<: *airflow-common
+    command: scheduler
+    container_name: airflow-scheduler-standalone
+    restart: always
