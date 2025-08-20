@@ -25,3 +25,17 @@ class User(UserBase):
     # class Config:
     #     orm_mode = True
 
+# --- NewsHeadline 스키마 (이 부분이 제대로 있는지 확인!) ---
+
+class NewsHeadlineBase(BaseModel):
+    title: str
+    source: Optional[str] = "naver_news"
+
+class NewsHeadlineCreate(NewsHeadlineBase):
+    pass
+
+class NewsHeadline(NewsHeadlineBase):
+    id: int
+    created_at: datetime
+
+    model_config = ConfigDict(from_attributes=True)
