@@ -1,35 +1,32 @@
-import os 
+import os
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker 
+from sqlalchemy.orm import sessionmaker
 
-# 1. .env 파일에서 환경 변수 로드
+# .env 파일에서 환경 변수 로드
 DB_USER = os.getenv("DB_USER")
 DB_PASSWORD = os.getenv("DB_PASSWORD")
 DB_HOST = os.getenv("DB_HOST")
 DB_PORT = os.getenv("DB_PORT")
 DB_NAME = os.getenv("DB_NAME")
 
-# 2. 데이터베이스 연결 URL 생성
+# 데이터베이스 연결 URL 생성 (PostgreSQL 용)
 SQLALCHEMY_DATABASE_URL = f"postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
 
-# 3. SQLAlchemy 엔진 생성
-# create_engine 함수는 DB와 연결을 설정하는 시작점
+# SQLAlchemy 엔진 생성
 engine = create_engine(SQLALCHEMY_DATABASE_URL)
 
-# 4. 데이터베이스 세션 생성
-# SessionLocal 클래스는 데이터베이스 세션의 인스턴스(생성자)를 만듭니다.
-# 각 세션은 DB와 대화하는 창구 역할을 합니다.
+# 데이터베이스 세션 생성 클래스
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
-# 5. ORM 모델의 기본 클래스 생성
-# 앞으로 우리가 만들 DB 테이블 모델 (e.g., User, Post 등)들은 모두 이 Base 클래스를 상속 받아야 합니다.
+# ORM 모델의 기본이 될 Base 클래스 생성
 Base = declarative_base()
 
-# Dependency (의존성 주입을 위한 함수)
+
+# API 의존성 주입을 위한 함수
 def get_db():
     db = SessionLocal()
     try:
-        yield db # 데이터베이스 세션을 생성하고 반환
+        yield db
     finally:
-        db.close() # 세션을 닫아 리소스 해제
+        db.close()

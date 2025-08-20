@@ -1,0 +1,5 @@
+# Airflow DAG에서 필요한 라이브러리
+requests>=2.31.0
+beautifulsoup4>=4.12.2
+psycopg2-binary>=2.9.7 # DB 접속을 위해 필요
+SQLAlchemy~=1.4.46  # Airflow 2.8.x와 호환되는 버전으로 고정

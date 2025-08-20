@@ -1,33 +1,44 @@
-version: '3.8' # docker-compose 파일 규격 버전을 명시
-
-services: # 이 아래에 실행할 서비스(즉 컨테이너)들을 정의
-
-# 1.백엔드 API 서버 서비스 정의
+services:
+  # 백엔드 API 서버 서비스
   backend:
-    container_name : trend-ai-backend-container # 컨테이너의 고정 이름 지정
+    container_name: trend-ai-backend-container
     build:
-      context: ./backend #Dockerfile이 있는 경로 지정
-      dockerfile: Dockerfile 
+      context: ./backend  # ./backend 폴더를 빌드 컨텍스트로 사용
+      dockerfile: Dockerfile
     ports:
-      - "8000:8000" # 호스트의 8000 포트를 컨테이너의 8000 포트에 연결(매핑)
+      - "8000:8000"
     volumes:
-      - ./backend/app:/app/app # 볼륨 마운트 경로도 변경 #호스트의 ./backend 폴더와 컨테이너의 /app 폴더를 연결 (코드 변경 시 자동 반영, 실시간)
+      # 호스트의 ./backend/app 폴더를 컨테이너의 /app/app 폴더와 연결 (코드 실시간 반영)
+      - ./backend/app:/app/app
     env_file:
-      - ./backend/.env # 환경 변수 파일 지정
+      # ./backend/.env 파일을 환경 변수로 사용
+      - ./backend/.env
     depends_on:
-      - db # 이 서비스는 db 서비스가 시작된 후에 시작됨
+      - db # db 서비스가 먼저 실행되도록 보장
+    networks: # 사용할 네트워크 지정
+      - default
 
+  # PostgreSQL 데이터베이스 서비스
   db:
     container_name: trend-ai-db-container
-    image: postgres:15-alpine #공식 PostgreSQL 이미지 사용 (경량 alpine 버전)
-    ports: 
+    image: postgres:15-alpine
+    ports:
       - "5432:5432"
     volumes:
-      - pgdata:/var/lib/postgresql/data # 데이터를 영속적으로 저장하기 위한 볼륨 연결
+      # 데이터를 영속적으로 저장하기 위한 볼륨
+      - pgdata:/var/lib/postgresql/data
     environment:
-      - POSTGRES_USER=myuser
+      - POSTGR ES_USER=myuser
       - POSTGRES_PASSWORD=mypassword
-      - POSTGRES_DB=mydatabase 
+      - POSTGRES_DB=mydatabase
+    networks:
+      - default
 
-volumes: #위에서 사용한 볼륨을 정의
-  pgdata: 
+# Docker 네트워크 정의
+networks:
+  default:
+    name: trend-ai-network # 네트워크에 명시적인 이름 부여
+
+# Docker 볼륨 정의
+volumes:
+  pgdata:
