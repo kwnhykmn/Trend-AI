@@ -15,4 +15,4 @@ psycopg2-binary>=2.9.7 #SQLAlchemy가 내부적으로 PostgreSQL과 실제로 �
 
 # Web Crawling
 requests>=2.31.0
-beautifulsoup4>=4.12.2
+beautifulsoup4>=4.12.2 

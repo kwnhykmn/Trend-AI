@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from .database import engine
 from . import models
-from .routers import users # 우리가 만든 users 라우터를 임포트합니다.
+from .routers import users, news# 우리가 만든 users 라우터를 임포트합니다.
 
 # 애플리케이션 시작 시 DB 테이블 생성
 models.Base.metadata.create_all(bind=engine)
@@ -15,6 +15,7 @@ app = FastAPI(
 
 # /api/v1 경로 아래에 users 라우터를 포함시킵니다.
 app.include_router(users.router, prefix="/api/v1")
+app.include_router(news.router, prefix="/api/v1") 
 
 
 # 서버가 살아있는지 확인하기 위한 기본 루트 경로

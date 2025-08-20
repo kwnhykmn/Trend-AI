@@ -1,5 +1,6 @@
 from pydantic import BaseModel, ConfigDict
 from typing import Optional # Optional 임포트
+from datetime import datetime
 
 # --- User 스키마 ---
 
@@ -27,3 +28,15 @@ class User(BaseModel):
     # class Config:
     #     orm_mode = True
 
+class NewsHeadlineBase(BaseModel):
+    title: str
+    source: Optional[str] = "naver_news"
+
+class NewsHeadlineCreate(NewsHeadlineBase):
+    pass
+
+class NewsHeadline(NewsHeadlineBase):
+    id: int
+    created_at: datetime
+
+    model_config = ConfigDict(from_attributes=True)

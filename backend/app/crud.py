@@ -45,3 +45,13 @@ def delete_user(db: Session, db_user: models.User):
     db.commit()
     # 삭제된 객체를 반환하여 API에서 마지막으로 확인할 수 있게 합니다.
     return db_user
+
+def get_headline_by_title(db: Session, title: str):
+    return db.query(models.NewsHeadline).filter(models.NewsHeadline.title == title).first()
+
+def create_news_headline(db: Session, headline: schemas.NewsHeadlineCreate):
+    db_headline = models.NewsHeadline(title=headline.title, source=headline.source)
+    db.add(db_headline)
+    db.commit()
+    db.refresh(db_headline)
+    return db_headline
