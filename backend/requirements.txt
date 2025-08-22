@@ -1,0 +1,18 @@
+# FastAPI 최신 버전 (Pydantic V2 완벽 지원)
+fastapi>=0.104.0
+
+# Uvicorn
+uvicorn[standard]>=0.23.2
+
+# Pydantic V2 (명시적으로 추가)
+pydantic>=2.4.2
+
+# Database
+# SQLAlchemy
+sqlalchemy>=2.0.22 # 파이썬 코드 (객체)로 데이터베이스를 조작할 수 있게 해주는 라이브러리 
+# PostgreSQL Driver
+psycopg2-binary>=2.9.7 #SQLAlchemy가 내부적으로 PostgreSQL과 실제로 통신할 떄 사용하는 라이브러리
+
+# Web Crawling
+requests>=2.31.0
+beautifulsoup4>=4.12.2 
